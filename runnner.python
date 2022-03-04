@@ -1,0 +1,75 @@
+#plans show words not guessed
+#fix capitalization
+#https://pypi.org/project/Random-Word/
+from unittest import skip
+
+
+letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+remainingLetters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+#jumpy, glent, brick, waqfs, vozhd
+answer = ['r', 'o', 'u', 'n', 'd']
+maxGuess = 6
+currentGuess =0
+answer = input ("Enter answer: ")
+guessStatus =['_', '_', '_', '_', '_']
+while currentGuess < maxGuess:
+    isValid = True
+    correctLetters = 0
+    guess =['_', '_', '_', '_', '_']
+    guess = input ("Enter guess: ")
+    if len(guess) != 5:
+        continue
+    else:
+        print(guess)
+    for i in range(5):
+        tempCorrectLetters = correctLetters
+        if (guess[i] in letters) == False:
+            #is not a letter
+            isValid = False
+        else:
+            #is a letter
+            if guess[i] == answer[i]:
+                correctLetters +=1
+        if (tempCorrectLetters != correctLetters) and (guess[i] in answer):
+            #no match turn yellow
+            try:
+                guessStatus[i] = '\033[2;32;40m' + guess[i] + '\033[0;0m'
+                #locate index of the letter in giant list
+                tempIndex = remainingLetters.index(guess[i])
+                #set letter in giant list to a color if guessed
+                remainingLetters[tempIndex]= '\033[2;32;40m' + guess[i] + '\033[0;0m'
+            except:
+                pass
+        elif guess[i] in answer:
+            #if there is a match turn green
+            try:
+                guessStatus[i] = '\033[2;33;40m' + guess[i] + '\033[0;0m'
+                #locate index of the letter in giant list
+                tempIndex = remainingLetters.index(guess[i])
+                #set letter in giant list to a color if guessed
+                remainingLetters[tempIndex]= '\033[2;33;40m' + guess[i] + '\033[0;0m'
+            except:
+                pass
+    if correctLetters==5:
+        strAnswer = str(answer)
+        currentGuess+=1
+        strGuesses = str(currentGuess)
+        print("You guessed the correct word: \"" + strAnswer + "\" in: " +strGuesses + " guesses")
+        for h in guessStatus:
+            print(h, end=" ")
+        print("")
+        break
+    elif isValid:
+        #valid guess was made but not correct answer
+        currentGuess+=1
+        print("not quite, try again!")
+        for i in guessStatus:
+            print(i, end=" ")
+        print("")
+        print("letters tried: ")
+        for h in remainingLetters:
+            print(h, end=" ")
+        print("")
+    else:
+        #input not valid e.g symbol or int
+        print("only lowercase alphabetical characters allowed")
